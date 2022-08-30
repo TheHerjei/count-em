@@ -11,6 +11,7 @@ function new_counter {
     clear -x
     echo -e "## Inserisci un nome per il nuovo counter...\n"
     read file_name
+    file_name=$(echo $file_name | sed 's/[ $\/%£]//g')
 
     if [ $file_name = "last" ]
     then
@@ -56,6 +57,14 @@ function list_counters {
         echo -e "## Digita il nome counter da attivare..."
 
         read new_active_counter
+        new_active_counter=$(echo $new_active_counter | sed 's/[ $\/%£]//g')
+
+        if [ $new_active_counter = "last" ]
+        then
+            echo "## Non può essere usato 'last' come nome per il counter..."
+            exit 0
+        fi
+
         echo $new_active_counter > counters/last
 
         clear -x
@@ -82,6 +91,18 @@ function add_to_last_counter {
     fi
 }
 
+function reset_counters {
+    if [ -d counters ]
+    then
+        rm -r counters
+        clear -x
+        echo "## Counters resettati"
+    else
+        clear -x
+        echo "## Non ci sono counters da resettare..."
+    fi
+}
+
 function help_menu {
     echo -e "COUNT-EM-ALL - Un semplice contatore...\n"
     echo -e "\tUso: count-em-all [OPZIONI]\n"
@@ -90,6 +111,7 @@ function help_menu {
     echo -e "last\tVisualizza il counter attivo"
     echo -e "list\tVisualizza tutti i counter in memoria e scegli quale attivare"
     echo -e "new\tCrea un nuovo counter e lo rende attivo"
+    echo -e "reset\tResetta tutti i counters!"
     echo -e "help\tVisualizza questa guida\n"
 }
 
@@ -108,6 +130,9 @@ help_menu
 ;;
 "")
 add_to_last_counter
+;;
+reset)
+reset_counters
 ;;
 *)
 echo -e "# Opzione non riconosciuta...\n"
