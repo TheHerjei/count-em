@@ -1,0 +1,109 @@
+#!/bin/bash
+
+function new_counter {
+    if [[ ! -d counters ]]
+    then
+        mkdir counters
+    fi
+
+    local file_name=0
+
+    clear -x
+    echo -e "## Inserisci un nome per il nuovo counter...\n"
+    read file_name
+
+    if [ $file_name = "last" ]
+    then
+        echo "## Non può essere usato 'last' come nome per il counter..."
+        exit 0
+    fi
+
+    echo 1 > counters/$file_name
+    echo $file_name > counters/last
+
+    clear -x
+    echo -e "## Creato $file_name\n"
+    cat counters/$file_name
+}
+
+function last_counter {
+    if [ -e counters/last ]
+    then
+        local last_file_name=$(cat counters/last)
+        clear -x
+        echo "## Nome counter: $last_file_name"
+        echo "## Conteggio: $(cat counters/$last_file_name)"
+    else
+        clear -x
+        echo "## Non trovo ultimo counter..."
+    fi
+}
+
+function list_counters {
+    if [ -d counters ]
+    then
+        clear -x
+        local counters_names=$(ls counters/ | sed s/last//)
+        local new_active_counter=0
+        echo -e "## Lista dei counters:"
+
+        for i in $counters_names
+        do
+            echo -e "#  $i  -  $(cat counters/$i)"
+        done
+        
+        echo -e "\n## Counter attivo: $(cat counters/last)"
+        echo -e "## Digita il nome counter da attivare..."
+
+        read new_active_counter
+        echo $new_active_counter > counters/last
+
+        clear -x
+        echo -e "## Counter attivo: $new_active_counter"
+    else
+        mkdir counters
+        list_counters
+    fi
+}
+
+function add_to_last_counter {
+    if [ -e counters/last ]
+    then
+        local last_file_name=$(cat counters/last)
+        local last_value=$(cat counters/$last_file_name)
+        let last_value++
+        echo $last_value > counters/$last_file_name
+        clear -x
+        echo "## Nome counter: $last_file_name"
+        echo "## Conteggio: $(cat counters/$last_file_name)"
+    else
+        clear -x
+        new_counter
+    fi
+}
+
+function help_menu {
+    clear -x
+    echo -e "COUNT-EM-ALL - Un semplice contatore...\n"
+    echo -e "\tUso: count-em-all [OPZIONI]\n"
+    echo -e "OPZIONI:"
+    echo -e "\tUsare senza opzioni per incrementare di 1 l'ultimo counter creato o per creare un nuovo counter se non ce ne sono di attivi"
+    echo -e "last\tVisualizza il counter attivo"
+    echo -e "list\tVisualizza tutti i counter in memoria"
+    echo -e "help\tVisualizza questa guida\n"
+}
+
+case $1 in
+last)
+last_counter
+;;
+list)
+list_counters
+;;
+help)
+help_menu
+;;
+*)
+add_to_last_counter
+;;
+esac
