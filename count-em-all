@@ -87,9 +87,10 @@ function help_menu {
     echo -e "COUNT-EM-ALL - Un semplice contatore...\n"
     echo -e "\tUso: count-em-all [OPZIONI]\n"
     echo -e "OPZIONI:"
-    echo -e "\tUsare senza opzioni per incrementare di 1 l'ultimo counter creato o per creare un nuovo counter se non ce ne sono di attivi"
+    echo -e "\tSenza opzioni incrementare di 1 il counter attivo oppure crea un nuovo counter se nessun counter è attivo"
     echo -e "last\tVisualizza il counter attivo"
     echo -e "list\tVisualizza tutti i counter in memoria"
+    echo -e "new\tCrea un nuovo counter e lo rende attivo"
     echo -e "help\tVisualizza questa guida\n"
 }
 
@@ -99,6 +100,9 @@ last_counter
 ;;
 list)
 list_counters
+;;
+new)
+new_counter
 ;;
 help)
 help_menu
