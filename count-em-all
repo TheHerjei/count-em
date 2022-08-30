@@ -83,13 +83,12 @@ function add_to_last_counter {
 }
 
 function help_menu {
-    clear -x
     echo -e "COUNT-EM-ALL - Un semplice contatore...\n"
     echo -e "\tUso: count-em-all [OPZIONI]\n"
     echo -e "OPZIONI:"
-    echo -e "\tSenza opzioni incrementare di 1 il counter attivo oppure crea un nuovo counter se nessun counter è attivo"
+    echo -e "\tSenza opzioni incrementa di 1 il counter attivo oppure crea un nuovo counter se nessuno è attivo\n"
     echo -e "last\tVisualizza il counter attivo"
-    echo -e "list\tVisualizza tutti i counter in memoria"
+    echo -e "list\tVisualizza tutti i counter in memoria e scegli quale attivare"
     echo -e "new\tCrea un nuovo counter e lo rende attivo"
     echo -e "help\tVisualizza questa guida\n"
 }
@@ -107,7 +106,11 @@ new_counter
 help)
 help_menu
 ;;
-*)
+"")
 add_to_last_counter
+;;
+*)
+echo -e "# Opzione non riconosciuta...\n"
+help_menu
 ;;
 esac
